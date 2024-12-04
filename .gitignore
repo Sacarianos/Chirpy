@@ -1,0 +1,28 @@
+# IDE specific files
+.idea/
+.vscode/
+
+# Compiled binary
+*.exe
+*.out
+*.dll
+*.so
+*.dylib
+
+# Logs
+*.log
+
+# Temporary and backup files
+*.tmp
+*.swp
+*.bak
+
+# Dependency directories
+vendor/
+
+# Go specific
+# Uncomment the next line if you have any specific binary executable generated
+# my-binary-name
+
+# Configuration files (ensure sensitive data is not tracked)
+.env
