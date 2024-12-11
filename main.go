@@ -19,6 +19,7 @@ type apiConfig struct {
 	db             *database.Queries
 	platform       string
 	JWTSecret      string
+	PolkaKey       string
 }
 
 func (cfg *apiConfig) middlewareMetricsInc(next http.Handler) http.Handler {
@@ -58,12 +59,17 @@ func main() {
 	if jwtSecret == "" {
 		log.Fatal("JWT_SECRET environment variable is required")
 	}
+	polkaKey := os.Getenv("POLKA_KEY")
+	if jwtSecret == "" {
+		log.Fatal("POLKA_KEY environment variable is required")
+	}
 
 	apiCfg := &apiConfig{
 		fileserverHits: atomic.Int32{},
 		db:             dbQueries,
 		platform:       platform,
 		JWTSecret:      jwtSecret,
+		PolkaKey:       polkaKey,
 	}
 
 	// Create a new ServeMux
@@ -77,6 +83,7 @@ func main() {
 
 	// API endpoints
 	mux.HandleFunc("GET /api/healthz", handlerReadiness)
+	mux.HandleFunc("POST /api/polka/webhooks", apiCfg.handlerWebhook)
 	mux.HandleFunc("GET /api/chirps", apiCfg.handleGetAllChirps)
 	mux.HandleFunc("POST /api/users", apiCfg.handleCreateUser)
 	mux.HandleFunc("PUT /api/users", apiCfg.handleUpdateUser)

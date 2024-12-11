@@ -155,3 +155,30 @@ func TestGetBearerToken(t *testing.T) {
 		})
 	}
 }
+
+func TestGetAPIKey(t *testing.T) {
+	headers := http.Header{}
+	headers.Set("Authorization", "ApiKey f271c81ff7084ee5b99a5091b42d486e")
+
+	apiKey, err := GetAPIKey(headers)
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
+	if apiKey != "f271c81ff7084ee5b99a5091b42d486e" {
+		t.Fatalf("expected api key to be 'f271c81ff7084ee5b99a5091b42d486e', got '%s'", apiKey)
+	}
+
+	// Test missing header
+	headers = http.Header{}
+	_, err = GetAPIKey(headers)
+	if err == nil {
+		t.Fatalf("expected error, got nil")
+	}
+
+	// Test invalid format
+	headers.Set("Authorization", "InvalidFormat")
+	_, err = GetAPIKey(headers)
+	if err == nil {
+		t.Fatalf("expected error, got nil")
+	}
+}

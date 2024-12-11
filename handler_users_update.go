@@ -56,17 +56,26 @@ func (cfg *apiConfig) handleUpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	type UserResponse struct {
-		ID        uuid.UUID `json:"id"`
-		Email     string    `json:"email"`
-		CreatedAt time.Time `json:"created_at"`
-		UpdatedAt time.Time `json:"updated_at"`
+		ID          uuid.UUID `json:"id"`
+		Email       string    `json:"email"`
+		CreatedAt   time.Time `json:"created_at"`
+		UpdatedAt   time.Time `json:"updated_at"`
+		IsChirpyRed bool      `json:"is_chirpy_red"`
+	}
+
+	var chirpyRed bool
+	if user.IsChirpyRed.Valid {
+		chirpyRed = user.IsChirpyRed.Bool
+	} else {
+		chirpyRed = false // or another default value based on your application logic
 	}
 
 	resp := UserResponse{
-		ID:        user.ID,
-		Email:     user.Email,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
+		ID:          user.ID,
+		Email:       user.Email,
+		CreatedAt:   user.CreatedAt,
+		UpdatedAt:   user.UpdatedAt,
+		IsChirpyRed: chirpyRed,
 	}
 
 	respondWithJSON(w, http.StatusOK, resp)

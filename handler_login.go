@@ -61,13 +61,20 @@ func (cfg *apiConfig) handleLogin(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusInternalServerError, "Couldn't save refresh token", err)
 		return
 	}
+	var chirpyRed bool
+	if user.IsChirpyRed.Valid {
+		chirpyRed = user.IsChirpyRed.Bool
+	} else {
+		chirpyRed = false // or another default value based on your application logic
+	}
 
 	respondWithJSON(w, http.StatusOK, response{
 		User: User{
-			ID:        user.ID,
-			CreatedAt: user.CreatedAt,
-			UpdatedAt: user.UpdatedAt,
-			Email:     user.Email,
+			ID:          user.ID,
+			CreatedAt:   user.CreatedAt,
+			UpdatedAt:   user.UpdatedAt,
+			Email:       user.Email,
+			IsChirpyRed: chirpyRed,
 		},
 		Token:        token,
 		RefreshToken: refresh_token,
